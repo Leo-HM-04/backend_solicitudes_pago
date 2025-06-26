@@ -143,6 +143,8 @@ exports.getSolicitudes = async (req, res) => {
     let solicitudes = [];
     if (rol === "solicitante") {
       solicitudes = await SolicitudModel.getPorUsuario(id_usuario);
+    } else if (rol === "pagador_banca") {
+      solicitudes = await SolicitudModel.getAutorizadas();
     } else {
       solicitudes = await SolicitudModel.getTodas();
     }
@@ -249,6 +251,7 @@ exports.createSolicitud = async (req, res) => {
       cuenta_destino,
       factura_url,
       concepto,
+      tipo_pago,
       fecha_limite_pago,
       soporte_url,
     } = req.body;
@@ -262,6 +265,7 @@ exports.createSolicitud = async (req, res) => {
       cuenta_destino,
       factura_url,
       concepto,
+      tipo_pago,
       fecha_limite_pago,
       soporte_url,
     });
@@ -347,6 +351,7 @@ exports.actualizarEstado = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 /**
  * @swagger
  * /api/solicitudes/{id}:
@@ -383,6 +388,34 @@ exports.actualizarEstado = async (req, res) => {
  *       500:
  *         description: Error del servidor
  */
+=======
+// Marcar una solicitud como pagada (solo pagador_banca)
+exports.marcarComoPagada = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { rol, id_usuario: id_pagador } = req.user;
+
+    if (rol !== "pagador_banca") {
+      return res.status(403).json({ error: "No tienes permisos para marcar la solicitud como pagada" });
+    }
+
+    const filasActualizadas = await SolicitudModel.marcarComoPagada(id, id_pagador);
+
+    if (filasActualizadas === 0) {
+      return res.status(404).json({
+        error: "No se pudo marcar como pagada. Verifica que esté autorizada o que exista.",
+      });
+    }
+
+    res.json({ message: "Solicitud marcada como pagada correctamente" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al marcar la solicitud como pagada" });
+  }
+};
+
+// Eliminar una solicitud (solo admin_general)
+>>>>>>> eac983571927045bae869201bdef093c8f57e201
 exports.deleteSolicitud = async (req, res) => {
   try {
     const { id } = req.params;

@@ -17,6 +17,9 @@ router.get("/:id", verificarToken, controller.getSolicitud);
 // Aprobar o rechazar solicitud (solo aprobadores)
 router.put("/:id/estado", verificarToken, autorizarRol("aprobador"), controller.actualizarEstado);
 
+// Marcar como pagada (solo pagador_banca)
+router.put("/:id/pagar", verificarToken, controller.marcarComoPagada);
+
 // Eliminar solicitud (solo admin_general)
 router.delete("/:id", verificarToken, autorizarRol("admin_general"), controller.deleteSolicitud);
 
