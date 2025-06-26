@@ -46,8 +46,8 @@ const ejecutarRecurrentes = async () => {
           break;
         default:
           console.warn("Frecuencia desconocida:", plantilla.frecuencia);
-          continue;
-      }
+          continue; 
+      } 
 
       // Actualizar siguiente_fecha
       await pool.query(
@@ -66,4 +66,5 @@ const ejecutarRecurrentes = async () => {
 module.exports = { ejecutarRecurrentes };
 
 // Ejecutar la tarea automáticamente cada día a las 00:05
-cron.schedule("* * * * *", ejecutarRecurrentes);
+cron.schedule("5 0 * * *", ejecutarRecurrentes); // 👈 Esta ejecuta a las 00:05 todos los días
+
